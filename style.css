@@ -112,3 +112,99 @@
 .ez-lightbox-caption{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#fff;background:#000a;padding:7px 15px;border-radius:30px;white-space:nowrap;font-size:13px}
 .ez-product-admin-list{display:grid;gap:10px;margin-top:16px}.ez-product-admin-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e2e8f0;border-radius:12px}.ez-product-admin-item img{width:64px;height:64px;object-fit:cover;border-radius:8px;background:#f1f5f9}.ez-product-admin-item-info{flex:1;min-width:0}.ez-product-admin-item-info small{display:block;color:#64748b;margin-top:4px}.ez-edit-product-btn{background:#bd1829;color:white;border:0;padding:11px 16px;border-radius:8px;font-weight:700;cursor:pointer}.ez-admin-summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}.ez-admin-summary-cards>div{border:1px solid #e2e8f0;border-radius:12px;padding:14px;background:#fff}.ez-admin-summary-cards strong{display:block;font-size:24px}.ez-admin-summary-cards span{font-size:12px;color:#64748b}.ez-admin-detail{border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin:12px 0;background:#f8fafc;overflow-wrap:anywhere}
 @media(max-width:600px){.ez-lightbox{padding:50px 5px 30px}.ez-lightbox-prev,.ez-lightbox-next{width:38px;height:38px;font-size:26px}.ez-product-admin-item{flex-wrap:wrap}}
+
+/* ==============================================================
+   E-Z HOMEPAGE POLISH — 2026-11-14
+   CSS-only. Product grid, product gallery, account/admin logic,
+   applications, orders and inventory are deliberately unchanged.
+   ============================================================== */
+
+/* Header: improve tap targets, line-up and focus visibility. */
+header { box-shadow: 0 7px 24px rgba(12, 27, 78, .055); }
+.head { gap: clamp(12px, 2vw, 25px); }
+.search { transition: background-color .2s, border-color .2s, box-shadow .2s; }
+.search:focus-within { background: #fff; border-color: #b6c2ef; box-shadow: 0 0 0 3px rgba(24, 44, 153, .09); }
+.head .lang, .head .iconbtn, .head .cartbtn, .head .hamb { min-height: 42px; justify-content: center; }
+.head .iconbtn, .head .cartbtn { min-width: 40px; }
+header button:focus-visible, .category:focus-visible, .hero button:focus-visible, .footgrid button:focus-visible { outline: 3px solid #e1263c; outline-offset: 3px; }
+nav button { transition: color .2s ease, border-color .2s ease; }
+
+/* Main banner: stronger type and cleaner, more deliberate spacing. */
+.hero { background: radial-gradient(circle at 78% 43%, #e8edff 0, transparent 37%), linear-gradient(115deg,#fafbff 0%,#f4f6ff 58%,#edf1ff 100%); }
+.hero-inner { min-height: 450px; column-gap: 30px; }
+.hero-copy { padding: 56px 0 60px; }
+.hero .eyebrow { display: inline-block; letter-spacing: .18em; }
+.hero h1 { max-width: 670px; margin: 16px 0 18px; line-height: 1.06; }
+.hero p { max-width: 440px; margin: 0 0 12px; line-height: 1.7; }
+.hero .primary { box-shadow: 0 9px 20px rgba(224,9,24,.16); transition: background .2s, transform .2s, box-shadow .2s; }
+.hero .primary:hover { transform: translateY(-2px); box-shadow: 0 12px 22px rgba(224,9,24,.20); }
+.hero .secondary { border-radius: 8px; transition: background .2s; }
+.hero .secondary:hover { background: rgba(19,37,139,.07); }
+.art-tag { border-radius: 3px; }
+
+/* Three service benefits: maintain the same information, give each item breathing room. */
+.benefits { gap: 15px; padding-top: 22px; padding-bottom: 22px; }
+.benefits > div { min-width: 0; gap: 13px; padding: 12px 14px; border-radius: 12px; transition: background .2s; }
+.benefits > div:hover { background: #f7f9ff; }
+.benefits > div > svg { flex-shrink: 0; width: 29px; height: 29px; }
+.benefits span { min-width: 0; gap: 4px; }
+.benefits b { color: #182544; line-height: 1.35; }
+.benefits small { color: #69738a; line-height: 1.5; }
+
+/* Category cards only (featured product cards are intentionally untouched). */
+.category-grid { gap: 18px; }
+.category { border: 1px solid rgba(29,44,91,.055); border-radius: 15px; padding: 25px; box-shadow: 0 3px 10px rgba(16,29,70,.025); transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+.category:hover { transform: translateY(-3px); border-color: rgba(34,51,134,.15); box-shadow: 0 16px 32px rgba(17,31,92,.09); }
+.category strong { line-height: 1.15; }
+.category .cat-link { margin-top: 9px; }
+
+/* Footer: retain exact existing links and wording. */
+footer { background: linear-gradient(160deg,#111d76 0%,#0b176b 65%,#091455 100%); }
+.footgrid { gap: clamp(24px,3vw,44px); padding-bottom: 52px; }
+.footgrid > div { min-width: 0; }
+.footgrid h4 { font-family: Outfit,sans-serif; font-size: 16px; letter-spacing: -.01em; margin-bottom: 18px; }
+.footgrid button { line-height: 1.55; transition: color .2s; }
+.footgrid button:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.footgrid small { max-width: 340px; }
+.copyright { line-height: 1.5; }
+
+@media (min-width: 851px) {
+  .head .search { min-width: 210px; }
+}
+@media (max-width: 850px) {
+  .hero-inner { min-height: 380px; column-gap: 12px; }
+  .hero-copy { padding: 42px 0; }
+  .benefits { gap: 5px; }
+  .benefits > div { padding: 11px 7px; }
+}
+@media (max-width: 600px) {
+  /* Preserve the site's existing two-row phone header/search layout. */
+  .head { gap: 9px; }
+  .head .lang, .head .iconbtn, .head .cartbtn, .head .hamb { min-height: 38px; }
+  .head .iconbtn, .head .cartbtn { min-width: 34px; }
+  .head .search { border-radius: 8px; left: 19px; right: 19px; width: auto; box-shadow: 0 2px 8px rgba(15,28,82,.04); }
+  .hero-inner { min-height: 0; }
+  .hero-copy { padding: 43px 0 27px; }
+  .hero h1 { font-size: clamp(36px,10vw,44px); margin: 14px 0; }
+  .hero p { font-size: 14px; line-height: 1.65; }
+  .hero .primary { margin-top: 14px; padding: 14px 18px; }
+  .hero .secondary { padding: 14px 12px; }
+  .hero-art { height: 234px; }
+  .benefits { gap: 5px; padding-top: 14px; padding-bottom: 14px; }
+  .benefits > div { gap: 14px; padding: 12px 7px; }
+  .benefits > div > svg { width: 27px; height: 27px; }
+  .category-grid { gap: 12px; }
+  .category { height: 158px; padding: 17px; border-radius: 13px; }
+  .category strong { font-size: 16px; }
+  .footgrid { gap: 27px; padding-bottom: 36px; }
+  .footgrid h4 { margin-bottom: 12px; }
+  .footgrid button { margin-bottom: 10px; }
+}
+@media (max-width: 370px) {
+  .hero .primary { padding: 13px 14px; font-size: 13px; }
+  .hero .secondary { padding: 13px 8px; font-size: 13px; }
+  .category { padding: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .category, .hero .primary, .hero .secondary { transition: none; }
+}
