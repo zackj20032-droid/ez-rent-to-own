@@ -295,3 +295,35 @@ footer { background: linear-gradient(160deg,#111d76 0%,#0b176b 65%,#091455 100%)
   }
   .hero-copy { padding-bottom:0 !important; }
 }
+
+/* E-Z Rent To Own: Contact Us store directory — scoped to this page only */
+.ez-stores-contact{max-width:1130px;margin:0 auto;padding:2px 0 24px}
+.ez-contact-intro{margin:0 0 26px}
+.ez-contact-intro h2{font-family:Outfit,sans-serif;font-size:clamp(26px,3vw,37px);letter-spacing:-.035em;color:#101a4d;margin:8px 0 9px}
+.ez-contact-intro p{color:#606a7d;line-height:1.65;max-width:710px;margin:0}
+.ez-store-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.ez-store-card{border:1px solid #e0e4ef;border-radius:19px;background:#fff;box-shadow:0 12px 30px rgba(13,29,90,.055);padding:28px;min-width:0;display:flex;flex-direction:column}
+.ez-store-card-top{display:flex;align-items:center;gap:14px;padding-bottom:21px;border-bottom:1px solid #e9ecf4}
+.ez-store-mark,.ez-contact-bottom-icon{width:51px;height:51px;border-radius:13px;display:grid;place-items:center;flex:none;color:#dc061b;background:#fff0f2}
+.ez-store-overline{font-size:10px;font-weight:900;letter-spacing:.16em;color:#d40a1f}
+.ez-store-card h3{font-family:Outfit,sans-serif;color:#111a4a;margin:4px 0 0;font-size:27px;letter-spacing:-.025em}
+.ez-store-phone{padding:19px 0 22px;display:flex;flex-direction:column;gap:5px}
+.ez-store-phone span{color:#6a7284;font-size:12px;font-weight:800}
+.ez-store-phone a{color:#12259a;text-decoration:none;font-size:clamp(22px,2.7vw,29px);font-weight:900;letter-spacing:-.025em;width:max-content;max-width:100%}
+.ez-store-phone a:hover{text-decoration:underline}
+.ez-store-hours-head{display:flex;align-items:center;gap:10px;margin-bottom:11px;color:#d60a1d}
+.ez-store-hours-head h4{font-size:16px;color:#101a4d;margin:0}
+.ez-store-hours{border-top:1px solid #e9ecf4;margin-bottom:23px}
+.ez-store-hours>div{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid #edf0f5;padding:12px 0;align-items:baseline}
+.ez-store-hours span{font-size:13px;color:#596276}
+.ez-store-hours strong{font-size:13px;color:#172046;text-align:right;white-space:nowrap}
+.ez-store-hours .ez-store-closed{color:#bd1625}
+.ez-store-call-button{margin-top:auto;border-radius:10px;background:#d8001a;color:white!important;min-height:48px;display:flex;align-items:center;justify-content:center;gap:9px;font-weight:800;text-decoration:none;box-shadow:0 8px 17px rgba(216,0,26,.13)}
+.ez-store-call-button:hover{background:#b80018}
+.ez-contact-bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.ez-contact-service,.ez-contact-support{border-radius:15px;background:#f5f7fd;padding:22px;display:flex;align-items:flex-start;gap:13px;min-width:0}
+.ez-contact-bottom h3{margin:3px 0 7px;color:#151f54;font-size:18px}
+.ez-contact-bottom p{margin:0;color:#606a7d;font-size:13px;line-height:1.7}
+.ez-contact-support-link{background:none;color:#14269b;font-size:13px;font-weight:900;padding:9px 0 0;display:inline-flex;align-items:center;gap:5px}
+@media(max-width:760px){.ez-store-grid,.ez-contact-bottom{grid-template-columns:1fr}.ez-store-card{padding:23px}.ez-store-card h3{font-size:25px}.ez-contact-bottom{margin-top:18px}}
+@media(max-width:380px){.ez-store-hours>div{flex-direction:column;gap:4px}.ez-store-hours strong{text-align:left}.ez-contact-service,.ez-contact-support{padding:17px}}
