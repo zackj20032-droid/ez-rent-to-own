@@ -45,7 +45,7 @@ function App(){
  const t=s=>lang==='es'?(translations[s]||s):s;
  useEffect(()=>{document.documentElement.lang=lang;localStorage.setItem('ez_lang',lang)},[lang]);
  useEffect(()=>{localStorage.setItem('ez_content',JSON.stringify(content))},[content]);
- async function loadProducts(){setLoading(true);setProductError('');try{const {data,error}=await supabase.from('products').select('*').order('created_at',{ascending:false});if(error)throw error;const {data:gallery}=await supabase.from('product_images').select('product_id,image_url,sort_order').order('sort_order');setProducts((data||[]).map(p=>({...mapProduct(p),images:[p.image_url,...(gallery||[]).filter(i=>i.product_id===p.id).map(i=>i.image_url)].filter(Boolean).filter((x,i,ar)=>ar.indexOf(x)===i)})))}catch(e){setProductError(e.message||'Unable to load products')}finally{setLoading(false)}}
+ async function loadProducts(){setLoading(true);setProductError('');try{const {data,error}=await supabase.from('products').select('*').order('created_at',{ascending:false});if(error)throw error;const {data:gallery,error:galleryError}=await supabase.from('product_images').select('product_id,image_url,sort_order').order('sort_order');if(galleryError)throw galleryError;setProducts((data||[]).map(p=>({...mapProduct(p),images:[p.image_url,...(gallery||[]).filter(i=>i.product_id===p.id).map(i=>i.image_url)].filter(Boolean).filter((x,i,ar)=>ar.indexOf(x)===i)})))}catch(e){setProductError(e.message||'Unable to load products')}finally{setLoading(false)}}
  useEffect(()=>{loadProducts()},[]);
  useEffect(()=>{
   let active=true,sequence=0;
@@ -243,5 +243,26 @@ function App(){
  </>;
 }
 function ProductGrid({items,t,lang,admin,remove,add,emptySearch=false}){return items.length?<div className="products">{items.map(p=><article className="product" key={p.id}><ProductGallery images={p.images?.length?p.images:[p.image]} title={lang==='es'?(p.titleEs||p.title):p.title}/><div className="productbody"><small>{t(p.category)}</small><h3>{lang==='es'?(p.titleEs||p.title):p.title}</h3><p>{lang==='es'?(p.descriptionEs||p.description):p.description}</p><div className="price">{money(p.price)} <span>{t('outright')}</span></div>{p.weekly!=null&&<div className="weekly">{money(p.weekly)}/{lang==='es'?'semana':'week'} · {t('Apply to Rent')}</div>}<button className="buy" onClick={()=>add(p)}><ShoppingCart size={16}/> {t('Add to Cart')}</button>{admin&&<button className="delete" onClick={()=>remove(p.id)}><Trash2 size={14}/> {t('Delete product')}</button>}</div></article>)}</div>:<div className="emptyproducts"><div className="emptyicon"><Package size={32}/></div><h3>{t(emptySearch?'No products found':'Products coming soon')}</h3><p>{t(emptySearch?'Try another search or browse our categories.':"We're getting our selection ready. Check back soon or visit us in store.")}</p></div>}
-function ProductGallery({images,title}){const [index,setIndex]=useState(0);const [startX,setStartX]=useState(null);const pics=images.filter(Boolean);return <div className="ez-gallery" onTouchStart={e=>setStartX(e.touches[0]?.clientX??null)} onTouchEnd={e=>{if(startX===null||images.length<2)return;const delta=(e.changedTouches[0]?.clientX??startX)-startX;if(Math.abs(delta)>35)setIndex(v=>(v+(delta<0?1:images.length-1))%images.length);setStartX(null)}}><img src={pics[index%pics.length]||''} alt={title}/>{pics.length>1&&<><button className="ez-gallery-prev" aria-label="Previous photo" onClick={()=>setIndex(v=>(v+pics.length-1)%pics.length)}>‹</button><button className="ez-gallery-next" aria-label="Next photo" onClick={()=>setIndex(v=>(v+1)%pics.length)}>›</button><span className="ez-gallery-count">{index+1}/{pics.length}</span></>}</div>}
+function ProductGallery({images,title}){
+ const [index,setIndex]=useState(0),[open,setOpen]=useState(false);
+ const pics=[...new Set((images||[]).filter(Boolean))];
+ const total=pics.length;
+ const step=delta=>setIndex(i=>(i+delta+total)%total);
+ useEffect(()=>{if(!open)return;const key=e=>{if(e.key==='Escape')setOpen(false);if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)};window.addEventListener('keydown',key);const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{window.removeEventListener('keydown',key);document.body.style.overflow=previous}},[open,total]);
+ const touch=React.useRef(null),wheel=React.useRef(0);
+ const start=e=>{touch.current=e.touches[0]?.clientX??null};
+ const end=e=>{if(touch.current===null||total<2)return;const delta=(e.changedTouches[0]?.clientX??touch.current)-touch.current;if(Math.abs(delta)>35)step(delta<0?1:-1);touch.current=null};
+ const scroll=e=>{if(total<2||Math.abs(e.deltaY)+Math.abs(e.deltaX)<8)return;const now=Date.now();if(now-wheel.current<380)return;wheel.current=now;e.preventDefault();step((Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)>0?1:-1)};
+ return <><div className="ez-gallery" onTouchStart={start} onTouchEnd={end}>
+  <button type="button" className="ez-gallery-open" onClick={()=>setOpen(true)} aria-label={`Open ${title} photo gallery`}><img src={pics[index]||''} alt={title}/><span className="ez-gallery-hint">Tap to view photos</span></button>
+  {total>1&&<><button type="button" className="ez-gallery-prev" aria-label="Previous photo" onClick={()=>step(-1)}>‹</button><button type="button" className="ez-gallery-next" aria-label="Next photo" onClick={()=>step(1)}>›</button><span className="ez-gallery-count">{index+1}/{total}</span></>}
+ </div>{open&&<div className="ez-lightbox" role="dialog" aria-modal="true" aria-label={`${title} photo slideshow`} onClick={()=>setOpen(false)}>
+  <button type="button" className="ez-lightbox-close" onClick={()=>setOpen(false)} aria-label="Close gallery">×</button>
+  <div className="ez-lightbox-stage" onClick={e=>e.stopPropagation()} onTouchStart={start} onTouchEnd={end} onWheel={scroll}>
+   <img src={pics[index]||''} alt={`${title}, photo ${index+1}`} draggable="false"/>
+   {total>1&&<><button type="button" className="ez-lightbox-prev" aria-label="Previous photo" onClick={()=>step(-1)}>‹</button><button type="button" className="ez-lightbox-next" aria-label="Next photo" onClick={()=>step(1)}>›</button></>}
+   <div className="ez-lightbox-caption">{title} · {index+1} / {total}</div>
+  </div>
+ </div>}</>;
+}
 createRoot(document.getElementById('root')).render(<App/>);
