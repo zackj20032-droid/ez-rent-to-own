@@ -277,3 +277,21 @@ footer { background: linear-gradient(160deg,#111d76 0%,#0b176b 65%,#091455 100%)
  .hero-copy { padding-left:20px!important;padding-right:20px!important; }
  .hero .primary,.hero .secondary {padding:10px 12px;font-size:12px;}
 }
+
+/* Mobile reference layout correction: undo older sofa scaling and header spacer. */
+@media (max-width:600px) {
+  .head { margin-bottom:0 !important; }
+  .hero-art {
+    transform:none !important;
+    transform-origin:center center;
+    width:100% !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:0 !important;
+    aspect-ratio:864 / 427;
+    background-size:100% 100% !important;
+    background-position:center bottom;
+    margin:0 !important;
+  }
+  .hero-copy { padding-bottom:0 !important; }
+}
