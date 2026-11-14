@@ -54,7 +54,7 @@ function App(){
  const [tickets,setTickets]=useState([]),[selectedTicket,setSelectedTicket]=useState(null),[ticketMessages,setTicketMessages]=useState([]),[ticketBusy,setTicketBusy]=useState(false),[ticketLoading,setTicketLoading]=useState(false),[ticketError,setTicketError]=useState(''),[ticketNotice,setTicketNotice]=useState(''),[ticketFilter,setTicketFilter]=useState('all');
  const [modal,setModal]=useState(false),[saving,setSaving]=useState(false),[formError,setFormError]=useState('');
  const [cart,setCart]=useState([]),[cartOpen,setCartOpen]=useState(false),[mobile,setMobile]=useState(false),[search,setSearch]=useState(''),[notice,setNotice]=useState('');
- const canEditProducts=['owner','manager','inventory'].includes(staffRole);
+ const canEditProducts=['owner','manager','assistant_manager'].includes(staffRole);
  const t=s=>lang==='es'?(translations[s]||s):s;
  useEffect(()=>{document.documentElement.lang=lang;localStorage.setItem('ez_lang',lang)},[lang]);
  useEffect(()=>{localStorage.setItem('ez_content',JSON.stringify(content))},[content]);
