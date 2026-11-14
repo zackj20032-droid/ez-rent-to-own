@@ -327,3 +327,70 @@ footer { background: linear-gradient(160deg,#111d76 0%,#0b176b 65%,#091455 100%)
 .ez-contact-support-link{background:none;color:#14269b;font-size:13px;font-weight:900;padding:9px 0 0;display:inline-flex;align-items:center;gap:5px}
 @media(max-width:760px){.ez-store-grid,.ez-contact-bottom{grid-template-columns:1fr}.ez-store-card{padding:23px}.ez-store-card h3{font-size:25px}.ez-contact-bottom{margin-top:18px}}
 @media(max-width:380px){.ez-store-hours>div{flex-direction:column;gap:4px}.ez-store-hours strong{text-align:left}.ez-contact-service,.ez-contact-support{padding:17px}}
+
+
+/* ====================================================
+   SITE-WIDE DESKTOP / MOBILE DISPLAY CONTROL (Nov 2026)
+   Desktop = 1180px layout viewport; Mobile = device width.
+   Preference is stored locally and works on every page.
+   ==================================================== */
+.ez-global-view-control{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:10050;display:flex;align-items:center;gap:5px;padding:7px;background:#fff;box-shadow:0 8px 28px rgba(12,25,72,.25);border:1px solid #dbe1f1;border-radius:14px;max-width:calc(100vw - 20px)}
+.ez-global-view-label{font-size:12px;font-weight:900;color:#152052;padding:0 5px}
+.ez-global-view-control button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:9px;padding:10px 12px;background:#f4f6fc;color:#152052;border:1px solid transparent;font-size:13px;font-weight:900;white-space:nowrap;min-height:42px}
+.ez-global-view-control button.active{background:#13268c;color:white}
+.ez-global-view-control button:focus-visible{outline:3px solid #e2001c;outline-offset:2px}
+/* The desktop viewport is scaled down by mobile browsers. Slightly larger
+   controls keep the view selector visible before switching to mobile mode. */
+html[data-ez-display="desktop"] .ez-global-view-control{padding:10px;border-width:2px;gap:9px}
+html[data-ez-display="desktop"] .ez-global-view-control button{font-size:18px;min-height:55px;padding:14px 18px}
+html[data-ez-display="desktop"] .ez-global-view-label{font-size:16px}
+@media(max-width:600px){.ez-global-view-control{right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px))}.ez-global-view-control button{padding:9px 10px;font-size:12px}.ez-global-view-label{font-size:11px}}
+
+/* Admin: concise mobile navigation and readable records, not a shrunken desktop dashboard. */
+.ez-admin-view-mobile{display:block;overflow:visible;width:100%}
+.ez-admin-view-mobile .ez-admin-sidebar{width:100%;max-width:100%;border-radius:12px 12px 0 0}
+.ez-admin-view-mobile .ez-admin-sidebar nav{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;gap:5px;padding:8px 10px;scrollbar-width:thin}
+.ez-admin-view-mobile .ez-admin-sidebar nav button{flex:0 0 auto;width:auto;min-height:43px;padding:9px 12px;white-space:nowrap}
+.ez-admin-view-mobile .ez-admin-main{width:100%;min-width:0;padding:14px 10px 32px}
+.ez-admin-view-mobile .ez-admin-top{gap:10px;align-items:flex-start;flex-wrap:wrap}
+.ez-admin-view-mobile .ez-admin-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.ez-admin-view-mobile .ez-admin-stat{padding:14px 11px}
+.ez-admin-view-mobile .ez-admin-stat strong{font-size:26px}
+.ez-admin-view-mobile .ez-admin-card{padding:14px 12px;border-radius:13px}
+.ez-admin-view-mobile .ez-admin-tablehead{display:flex;flex-wrap:wrap;gap:10px}
+.ez-admin-view-mobile .ez-admin-tabletools{display:flex;flex-wrap:wrap;gap:8px;width:100%}
+.ez-admin-view-mobile .ez-admin-tabletools label{flex:1 1 180px;min-width:0}
+.ez-admin-view-mobile .ez-admin-tabletools input{width:100%;min-width:0}
+.ez-admin-view-mobile .ez-admin-table-scroll{overflow:visible;max-width:none;width:100%}
+.ez-admin-view-mobile .ez-admin-table{border:0;display:block;width:100%;min-width:0}
+.ez-admin-view-mobile .ez-admin-table thead{display:none}
+.ez-admin-view-mobile .ez-admin-table tbody{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.ez-admin-view-mobile .ez-admin-table tr{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:14px;border:1px solid #e3e8f2;border-radius:12px;background:#fff;box-shadow:0 3px 10px rgba(12,31,80,.05);min-width:0}
+.ez-admin-view-mobile .ez-admin-table td{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:0;border:0;min-width:0;white-space:normal;overflow-wrap:anywhere}
+.ez-admin-view-mobile .ez-admin-table td:not(:first-child){padding-top:8px;border-top:1px solid #edf0f6}
+.ez-admin-view-mobile .ez-admin-table td::before{font-size:11px;letter-spacing:.05em;font-weight:900;text-transform:uppercase;color:#64748b}
+.ez-admin-view-mobile.ez-admin-section-orders td:nth-child(1)::before{content:'Order'}
+.ez-admin-view-mobile.ez-admin-section-orders td:nth-child(2)::before{content:'Total'}
+.ez-admin-view-mobile.ez-admin-section-orders td:nth-child(3)::before{content:'Payment / order status'}
+.ez-admin-view-mobile.ez-admin-section-orders td:nth-child(4)::before{content:'Fulfillment'}
+.ez-admin-view-mobile.ez-admin-section-orders td:nth-child(5)::before{content:'Tracking'}
+.ez-admin-view-mobile.ez-admin-section-inventory td:nth-child(1)::before{content:'Product'}
+.ez-admin-view-mobile.ez-admin-section-inventory td:nth-child(2)::before{content:'Location'}
+.ez-admin-view-mobile.ez-admin-section-inventory td:nth-child(3)::before{content:'Quantity'}
+.ez-admin-view-mobile.ez-admin-section-inventory td:nth-child(4)::before{content:'Stock alert'}
+.ez-admin-view-mobile.ez-admin-section-customers td:nth-child(1)::before{content:'Customer'}
+.ez-admin-view-mobile.ez-admin-section-customers td:nth-child(2)::before{content:'Phone'}
+.ez-admin-view-mobile.ez-admin-section-customers td:nth-child(3)::before{content:'Customer ID'}
+.ez-admin-view-mobile.ez-admin-section-stores td:nth-child(1)::before{content:'Store'}
+.ez-admin-view-mobile.ez-admin-section-stores td:nth-child(2)::before{content:'Address'}
+.ez-admin-view-mobile.ez-admin-section-stores td:nth-child(3)::before{content:'Service area'}
+.ez-admin-view-mobile.ez-admin-section-stores td:nth-child(4)::before{content:'Active'}
+.ez-admin-view-mobile.ez-admin-section-staff td:nth-child(1)::before{content:'Staff'}
+.ez-admin-view-mobile.ez-admin-section-staff td:nth-child(2)::before{content:'Role'}
+.ez-admin-view-mobile.ez-admin-section-staff td:nth-child(3)::before{content:'Active'}
+.ez-admin-view-mobile .ez-admin-table td input,.ez-admin-view-mobile .ez-admin-table td select{max-width:100%;min-height:42px}
+.ez-admin-view-mobile .ez-admin-summary-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.ez-admin-view-mobile .ez-admin-detail{overflow-wrap:anywhere}
+.ez-admin-view-mobile .ez-admin-support .ez-ticket-layout{grid-template-columns:minmax(0,1fr)}
+.ez-admin-view-mobile .ez-admin-support .ez-ticket-list,.ez-admin-view-mobile .ez-admin-support .ez-ticket-detail{min-width:0;width:100%}
+.ez-admin-view-mobile .ez-admin-number{max-width:100px}
