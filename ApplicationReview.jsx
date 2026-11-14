@@ -9,17 +9,22 @@ const digits=(v)=>String(v||'').replace(/[^+0-9]/g,'');
 export default function ApplicationReview(){
  const [rows,setRows]=useState([]),[error,setError]=useState(''),[busy,setBusy]=useState(false),[loading,setLoading]=useState(true);
  const [query,setQuery]=useState(''),[filter,setFilter]=useState('all'),[expanded,setExpanded]=useState({});
- const [denying,setDenying]=useState(null),[reason,setReason]=useState('');
- async function load(){setLoading(true);setError('');const {data,error}=await supabase.from('rental_applications').select('id,customer_id,full_name,street_address,county,state,pay_frequency,status,denial_reason,requested_products,reference_contacts,created_at').order('created_at',{ascending:false});if(error)setError(error.message);else setRows(data||[]);setLoading(false)}
+ const [denying,setDenying]=useState(null),[reason,setReason]=useState(''),[idBusy,setIdBusy]=useState(null);
+ async function load(){setLoading(true);setError('');const {data,error}=await supabase.from('rental_applications').select('id,customer_id,full_name,street_address,county,state,pay_frequency,status,denial_reason,requested_products,reference_contacts,id_storage_path,created_at').order('created_at',{ascending:false});if(error)setError(error.message);else setRows(data||[]);setLoading(false)}
  useEffect(()=>{load()},[]);
+ async function secureAction(action,applicationId,extra={}){
+  const {data:{session}}=await supabase.auth.getSession();if(!session)throw new Error('Please sign in again.');
+  const {data,error}=await supabase.functions.invoke('rental-id-secure',{body:{action,application_id:applicationId,...extra}});
+  if(error){let msg=error.message;try{const j=await error.context?.json();msg=j?.error||msg}catch{}throw new Error(msg)}return data;
+ }
+ async function viewID(r){setIdBusy(r.id);setError('');try{const result=await secureAction('view',r.id);if(!result.url)throw new Error('No photo found');window.open(result.url,'_blank','noopener,noreferrer')}catch(e){setError(e.message)}finally{setIdBusy(null)}}
  async function decide(r,status,denialReason=''){
   if(status==='denied'&&!denialReason.trim())return;
   if(!window.confirm(`Change this application to ${labels[status]}?`))return;
   setBusy(true);setError('');
   const patch={status,denial_reason:status==='denied'?denialReason.trim():null};
   if(status==='denied')Object.assign(patch,{full_name:null,street_address:null,county:null,state:null,pay_frequency:null,id_storage_path:null,requested_products:[],reference_contacts:null});
-  const {error}=await supabase.from('rental_applications').update(patch).eq('id',r.id);
-  if(error)setError(error.message);else{setDenying(null);setReason('');await load()}
+  try{if(status==='denied'){await secureAction('deny',r.id,{reason:denialReason.trim()})}else{const {error}=await supabase.from('rental_applications').update(patch).eq('id',r.id);if(error)throw error}setDenying(null);setReason('');await load()}catch(e){setError(e.message)}
   setBusy(false);
  }
  const filtered=rows.filter(r=>{
@@ -42,6 +47,7 @@ export default function ApplicationReview(){
     <button className="ez-review-expand" onClick={()=>setExpanded(s=>({...s,[r.id]:!isOpen}))}>{isOpen?'Hide application details':'View application details'} {isOpen?<ChevronUp size={17}/>:<ChevronDown size={17}/>}</button>
     {isOpen&&<div className="ez-review-content">
      <div className="ez-review-info-grid"><section><div className="ez-review-section-title"><MapPin size={17}/> Applicant address</div><p>{r.street_address||'Details removed'}</p><small>{[r.county,r.state].filter(Boolean).join(', ')||'—'}</small></section><section><div className="ez-review-section-title"><Wallet size={17}/> Pay frequency</div><p>{readable(r.pay_frequency)}</p><small>Reported by applicant</small></section></div>
+     <section className="ez-review-block"><div className="ez-review-section-title"><ShieldCheck size={17}/> Government-issued photo ID</div>{r.id_storage_path?<button type="button" className="ez-review-view-id" disabled={!!idBusy} onClick={()=>viewID(r)}>{idBusy===r.id?'Opening secure photo…':'View ID securely (60-second access)'}</button>:<p className="ez-review-muted">{r.status==='denied'?'ID removed':'ID not uploaded yet'}</p>}</section>
      <section className="ez-review-block"><div className="ez-review-section-title"><Package size={17}/> Requested products <span className="ez-review-count">{products.length}</span></div>{products.length?<div className="ez-review-product-list">{products.map((p,i)=><div key={i}><span className="ez-review-product-dot"/>{p.title||p.title_en||'Product'}{p.quantity>1&&<small> × {p.quantity}</small>}</div>)}</div>:<p className="ez-review-muted">No products available</p>}</section>
      <section className="ez-review-block"><div className="ez-review-section-title"><Users size={17}/> Personal references <span className="ez-review-count">{refs.length}</span></div>{refs.length?<div className="ez-review-reference-grid">{refs.map((ref,i)=><div className="ez-review-reference" key={i}><small>REFERENCE {i+1}</small><strong>{ref.name||'Not provided'}</strong>{ref.phone?<a href={`tel:${digits(ref.phone)}`}><Phone size={14}/>{ref.phone}</a>:<span>Phone not provided</span>}</div>)}</div>:<p className="ez-review-muted">Reference details removed or unavailable</p>}</section>
      {r.denial_reason&&<div className="ez-review-denial"><XCircle size={18}/><div><strong>Reason for denial</strong><p>{r.denial_reason}</p></div></div>}
